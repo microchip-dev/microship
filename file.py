@@ -1,5 +1,6 @@
 import io
 import os
+import socket
 import tqdm
 from flask import Flask, request, send_file
 from PyPDF2 import PdfReader
@@ -52,5 +53,15 @@ def process_pdf():
     else:
         return "El PDF tiene más de 5 páginas, no se procesó.", 400
 
+@app.route('/hook')
+def hook():
+    return "<h2 style='font-weight: 400'>Hello world</h2>"
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    if 'PORT' in os.environ:
+        port = int(os.environ.get('PORT'))
+        print(f"Listening on IP {socket.gethostbyname(socket.gethostname())} and port {port}")
+    else:
+        port = 5000
+        print(f"Listening on IP {socket.gethostbyname(socket.gethostname())} and port {port}")
+    app.run(host='0.0.0.0', port=port, debug=True)
